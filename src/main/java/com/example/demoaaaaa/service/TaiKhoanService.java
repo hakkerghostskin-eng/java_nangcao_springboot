@@ -1,7 +1,10 @@
 package com.example.demoaaaaa.service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demoaaaaa.model.KhachHang;
@@ -9,9 +12,7 @@ import com.example.demoaaaaa.repository.TaiKhoanRepository;
 
 @Service 
 public class TaiKhoanService {
-    // ma hoa mat khau, phai them vao .pom
-    // @Autowired 
-    // private PassWordEncode passWordEncode;
+    private final PasswordEncoder passWordEncode = new BCryptPasswordEncoder();
     private final TaiKhoanRepository TaiKhoanRepository;
 
     public TaiKhoanService(TaiKhoanRepository TaiKhoanRepository) {
@@ -29,8 +30,19 @@ public class TaiKhoanService {
             kh.setGioiTinh("KHAC");
         }
 
-        // viet ma hoa mat khau
-        // kh.setMatKhau(passWordEncode.encode(kh.getMatKhau()));
+        if (TaiKhoanRepository.kiemTraEmailTonTai(kh.getEmail())) {
+            throw new IllegalArgumentException("Email đã tồn tại");
+        }
+
+        kh.setMatKhau(passWordEncode.encode(kh.getMatKhau()));
         return TaiKhoanRepository.save(kh);
+    }
+
+    public Optional<KhachHang> dangNhap(String taiKhoan, String matKhau) {
+        if (taiKhoan == null || taiKhoan.isBlank() || matKhau == null || matKhau.isBlank()) {
+            return Optional.empty();
+        }
+
+        return TaiKhoanRepository.findByEmailOrSoDienThoai(taiKhoan.trim()).filter(kh -> Boolean.TRUE.equals(kh.getTrangThai())).filter(kh -> kh.getMatKhau() != null && passWordEncode.matches(matKhau, kh.getMatKhau()));
     }
 }

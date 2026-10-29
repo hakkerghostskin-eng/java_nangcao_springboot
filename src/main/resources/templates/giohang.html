@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Giỏ hàng | Trà Sữa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="cart-page">
+    <header class="detail-header">
+        <div class="container detail-header-inner">
+            <a class="back-link" th:href="@{/}">← <span>Tiếp tục mua hàng</span></a>
+            <span class="brand-mark">TRÀ SỮA</span>
+            <span class="detail-cart-link">Giỏ hàng <span class="cart-count" th:text="${cartCount}">0</span></span>
+        </div>
+    </header>
+
+    <main class="container cart-main">
+        <h1>Giỏ hàng của bạn</h1>
+        <div class="form-success" th:if="${thongBao}" th:text="${thongBao}" role="status"></div>
+        <div class="form-alert" th:if="${loi}" th:text="${loi}" role="alert"></div>
+
+        <section class="empty-cart" th:if="${#lists.isEmpty(items)}">
+            <p>Giỏ hàng của bạn đang trống.</p>
+            <a class="cart-continue-button" th:href="@{/}">Khám phá thực đơn</a>
+        </section>
+
+        <div class="cart-layout" th:if="${!#lists.isEmpty(items)}">
+            <section class="cart-items" aria-label="Sản phẩm trong giỏ">
+                <article class="cart-item" th:each="item, state : ${items}">
+                    <img class="cart-item-image"
+                         th:if="${item.image != null and !#strings.isEmpty(item.image)}"
+                         th:src="@{'/images/' + ${item.image}}"
+                         th:alt="${item.productName}">
+                    <div class="cart-item-placeholder"
+                         th:if="${item.image == null or #strings.isEmpty(item.image)}">TRÀ SỮA</div>
+
+                    <div class="cart-item-details">
+                        <h2 th:text="${item.productName}">Tên sản phẩm</h2>
+                        <p th:text="${item.sizeName}">Kích cỡ</p>
+                        <ul class="cart-toppings" th:if="${!#lists.isEmpty(item.toppings)}">
+                            <li th:each="topping : ${item.toppings}">
+                                <span th:text="${topping.name}">Topping</span>
+                                <span th:text="${#numbers.formatDecimal(topping.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
+                            </li>
+                        </ul>
+                        <p class="cart-item-unit">
+                            Đơn giá:
+                            <strong th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</strong>
+                        </p>
+                    </div>
+
+                    <div class="cart-item-actions">
+                        <form class="cart-quantity-form" th:action="@{/gio-hang/cap-nhat}" method="post">
+                            <input type="hidden" name="key" th:value="${cartKeys[state.index]}">
+                            <label class="visually-hidden" th:for="${'quantity-' + state.index}">Số lượng</label>
+                            <input th:id="${'quantity-' + state.index}" name="quantity" type="number" min="0" max="50" th:value="${item.quantity}" required>
+                            <button type="submit">Cập nhật</button>
+                        </form>
+                        <p class="cart-line-total">
+                            <span>Thành tiền</span>
+                            <strong th:text="${#numbers.formatDecimal(item.lineTotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</strong>
+                        </p>
+                        <form th:action="@{/gio-hang/xoa}" method="post">
+                            <input type="hidden" name="key" th:value="${cartKeys[state.index]}">
+                            <button class="cart-remove-button" type="submit">Xóa sản phẩm</button>
+                        </form>
+                    </div>
+                </article>
+            </section>
+
+            <aside class="cart-summary">
+                <h2>Tóm tắt đơn hàng</h2>
+                <p>
+                    <span>Tổng số lượng</span>
+                    <strong th:text="${cartCount}">0</strong>
+                </p>
+                <p class="cart-grand-total">
+                    <span>Tổng tiền</span>
+                    <strong th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</strong>
+                </p>
+                <a class="cart-continue-button" th:href="@{/}">Tiếp tục mua hàng</a>
+                <form th:action="@{/gio-hang/xoa-tat-ca}" method="post"
+                      onsubmit="return confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')">
+                    <button class="cart-clear-button" type="submit">Xóa toàn bộ giỏ hàng</button>
+                </form>
+            </aside>
+        </div>
+    </main>
+</body>
+</html>

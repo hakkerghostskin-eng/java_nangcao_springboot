@@ -6,12 +6,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demoaaaaa.model.KhachHang;
 import com.example.demoaaaaa.service.TaiKhoanService;
 
 import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +37,29 @@ public class TaiKhoanController {
     public String hienthiDangNhap(Model model) {
         model.addAttribute("khachhang", new KhachHang());
         return "dang-nhap";
+    }
+
+    @PostMapping("/dang-nhap")
+    public String dangNhap( @RequestParam(name = "taiKhoan", required = false) String taiKhoan, @RequestParam(name = "matKhau", required = false) String matKhau, HttpSession session, Model model) {
+        KhachHang khachHang = tkService.dangNhap(taiKhoan, matKhau).orElse(null);
+        if (khachHang == null) {
+            model.addAttribute("loiDangNhap", "Email/số điện thoại hoặc mật khẩu không chính xác.");
+            return "dang-nhap";
+        }
+
+        session.setAttribute("khachHang", khachHang);
+        return "redirect:/";
+    }
+
+    @GetMapping("/dang-xuat")
+    public String dangXuat(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
+
+    @GetMapping("/quen-mat-khau")
+    public String hienThiQuenMatKhau() {
+        return "quen-mat-khau";
     }
 
     @PostMapping("/dang-ky")

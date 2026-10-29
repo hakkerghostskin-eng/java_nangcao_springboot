@@ -17,7 +17,22 @@
     <!-- HEADER -->
 
     <header class="header">
-
+        <nav class="home-account-actions" aria-label="Tài khoản">
+            <a class="home-account-button home-cart-button" th:href="@{/gio-hang}">
+                Giỏ hàng <span class="cart-count" th:text="${cartCount}">0</span>
+            </a>
+            <div class="home-greeting" th:if="${session.khachHang != null}">
+                Xin chào,
+                <span class="home-greeting-name" th:text="${session.khachHang.hoTen}"></span>
+            </div>
+            <div th:if="${session.khachHang != null}">
+                <a class="home-account-button home-logout-button" th:href="@{/dang-xuat}">Đăng xuất</a>
+            </div>
+            <div th:if="${session.khachHang == null}">
+                <a class="home-account-button home-login-button" th:href="@{/dang-nhap}">Đăng nhập</a>
+                <a class="home-account-button home-register-button" th:href="@{/dang-ky}">Đăng ký</a>
+            </div>
+        </nav>
         <div class="container">
 
             <h1>TRÀ SỮA</h1>
@@ -35,7 +50,7 @@
 
         <div class="container">
 
-            <h2><a th:href="@{/dang-ky}" style="text-decoration: none; ">Danh mục</a></h2>
+            <h2>Danh mục</h2>
             
 
             <div class="category-list">
@@ -68,7 +83,7 @@
 
             <h2>Trà sữa của chúng tôi</h2>
 
-            <div class="product-grid">
+            <div class="product-grid" th:if="${!#lists.isEmpty(sanPhams)}">
 
                  <a class="product-card" th:each="sp : ${sanPhams}" th:href="@{/san-pham/{id}(id=${sp.idSanPham})}">
                     <div class="product-image">
@@ -80,6 +95,11 @@
                         <h3 th:text="${sp.tenSanPham}">
                             Tên sản phẩm
                         </h3>
+
+                        <p class="product-price"
+                           th:text="${#numbers.formatDecimal(sp.giaCoBan, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                            0 ₫
+                        </p>
 
                         <p th:text="${sp.moTa}">
                             Mô tả sản phẩm
@@ -99,6 +119,34 @@
                 </a>
 
             </div>
+
+            <p class="product-empty" th:if="${#lists.isEmpty(sanPhams)}" role="status">
+                Hiện chưa có sản phẩm nào để hiển thị.
+            </p>
+
+            <nav class="pagination" aria-label="Phân trang sản phẩm"
+                 th:if="${totalPages > 1}">
+                <a class="pagination-button" th:if="${currentPage > 0}" th:href="@{/(page=0)}">Trang đầu</a>
+                <span class="pagination-button is-disabled" th:if="${currentPage == 0}" aria-disabled="true">Trang đầu</span>
+
+                <a class="pagination-button" th:if="${currentPage > 0}"
+                   th:href="@{/(page=${currentPage - 1})}">Trước</a>
+                <span class="pagination-button is-disabled" th:if="${currentPage == 0}" aria-disabled="true">Trước</span>
+
+                <a class="pagination-page" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                   th:href="@{/(page=${pageNumber})}"
+                   th:text="${pageNumber + 1}"
+                   th:classappend="${pageNumber == currentPage} ? ' is-current'"
+                   th:attr="aria-current=${pageNumber == currentPage ? 'page' : null}">1</a>
+
+                <a class="pagination-button" th:if="${currentPage < totalPages - 1}"
+                   th:href="@{/(page=${currentPage + 1})}">Sau</a>
+                <span class="pagination-button is-disabled" th:if="${currentPage >= totalPages - 1}" aria-disabled="true">Sau</span>
+
+                <a class="pagination-button" th:if="${currentPage < totalPages - 1}"
+                   th:href="@{/(page=${totalPages - 1})}">Trang cuối</a>
+                <span class="pagination-button is-disabled" th:if="${currentPage >= totalPages - 1}" aria-disabled="true">Trang cuối</span>
+            </nav>
 
         </div>
 

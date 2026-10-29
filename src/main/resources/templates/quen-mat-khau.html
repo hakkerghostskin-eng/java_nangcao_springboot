@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quên mật khẩu | Trà Sữa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="account-page">
+    <main class="account-card forgot-password-card">
+        <a class="account-brand" th:href="@{/}">TRÀ SỮA</a>
+        <p class="account-eyebrow">Hỗ trợ tài khoản</p>
+        <h1>Quên mật khẩu?</h1>
+        <p class="account-intro">
+            Nhập email đã đăng ký để bắt đầu khôi phục mật khẩu.
+        </p>
+
+        <div class="forgot-password-notice" role="status">
+            Chức năng gửi email khôi phục chưa được tích hợp.
+        </div>
+
+        <form class="account-form">
+            <div class="form-field">
+                <label for="email">Email đã đăng ký</label>
+                <input id="email" name="email" type="email" autocomplete="email"
+                       placeholder="ban@example.com" disabled>
+            </div>
+            <button class="account-submit" type="button" disabled>Gửi hướng dẫn</button>
+        </form>
+
+        <a class="account-back" th:href="@{/dang-nhap}">← Quay lại đăng nhập</a>
+    </main>
+</body>
+</html>

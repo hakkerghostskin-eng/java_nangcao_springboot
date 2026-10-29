@@ -3,6 +3,8 @@ package com.example.demoaaaaa.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demoaaaaa.model.SanPham;
@@ -18,6 +20,10 @@ public class SanPhamService {
 
     public List<SanPham> getAllSanPham() {
         return sanPhamRepository.findAll();
+    }
+
+    public Page<SanPham> getSanPhamPage(Pageable pageable) {
+        return sanPhamRepository.findAll(pageable);
     }
 
     public Optional<SanPham> getSanPham(Integer sanphamId)  {
