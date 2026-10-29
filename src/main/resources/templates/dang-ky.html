@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng ký | Trà Sữa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="account-page">
+    <main class="account-card account-card-wide">
+        <a class="account-brand" th:href="@{/}">TRÀ SỮA</a>
+        <p class="account-eyebrow">Thành viên mới</p>
+        <h1>Tạo tài khoản</h1>
+        <p class="account-intro">Đăng ký để lưu thông tin và tận hưởng những ly trà sữa yêu thích.</p>
+
+        <div class="form-alert" th:if="${loiDangKy}" th:text="${loiDangKy}" role="alert"></div>
+
+        <form class="account-form" th:action="@{/dang-ky}" th:object="${khachhang}" method="post">
+            <div class="form-field">
+                <label for="hoTen">Họ và tên <span>*</span></label>
+                <input id="hoTen" th:field="*{hoTen}" type="text" maxlength="120" autocomplete="name" >
+                <small class="field-error" ></small>
+            </div>
+            <div class="form-field">
+                <label for="soDienThoai">Số điện thoại <span>*</span></label>
+                <input id="soDienThoai" th:field="*{soDienThoai}" type="tel"  maxlength="20" autocomplete="tel" >
+                <small class="field-error" ></small>
+            </div>
+            <div class="form-field">
+                <label for="email">Email <span>*</span></label>
+                <input id="email" th:field="*{email}" type="email"  maxlength="100" autocomplete="email" >
+                <small class="field-error"></small>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="ngaySinh">Ngày sinh</label>
+                    <input id="ngaySinh" th:field="*{ngaySinh}" type="date">
+                    <small class="field-error"></small>
+                </div>
+                <div class="form-field">
+                    <label for="gioiTinh">Giới tính</label>
+                    <select id="gioiTinh" th:field="*{gioiTinh}">
+                        <option value="">Không chọn</option>
+                        <option value="NAM">Nam</option>
+                        <option value="NU">Nữ</option>
+                        <option value="KHAC">Khác</option>
+                    </select>
+                    <small class="field-error"></small>
+                </div>
+            </div>
+            <div class="form-field">
+                <label for="diaChi">Địa chỉ</label>
+                <input id="diaChi" th:field="*{diaChi}" type="text" maxlength="255" autocomplete="street-address">
+                <small class="field-error"></small>
+            </div>
+            <div class="form-field">
+                <label for="matKhau">Mật khẩu <span>*</span></label>
+                <input id="matKhau" th:field="*{matKhau}" type="password" minlength="8" maxlength="72"
+                       autocomplete="new-password" >
+                <small class="field-hint">Ít nhất 8 ký tự.</small>
+                <small class="field-error"></small>
+            </div>
+            <div class="form-field">
+                <label for="xacNhanMatKhau">Xác nhận mật khẩu <span>*</span></label>
+                <input id="xacNhanMatKhau" th:field="*{confirmPassword}" type="password"
+                       autocomplete="new-password" >
+                <small class="field-error"></small>
+            </div>
+            <button class="account-submit" type="submit">Đăng ký</button>
+        </form>
+
+        <p class="account-switch">Đã có tài khoản? <a>Đăng nhập</a></p>
+        <a class="account-back" th:href="@{/}">← Trở về cửa hàng</a>
+    </main>
+</body>
+</html>

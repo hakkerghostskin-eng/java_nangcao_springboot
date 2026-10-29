@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Trà Sữa</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="container">
+
+            <h1>TRÀ SỮA</h1>
+
+            <p>Thưởng thức ly trà sữa yêu thích của bạn</p>
+
+        </div>
+
+    </header>
+
+
+    <!-- DANH MỤC -->
+
+    <section class="categories">
+
+        <div class="container">
+
+            <h2><a th:href="@{/dang-ky}" style="text-decoration: none; ">Danh mục</a></h2>
+            
+
+            <div class="category-list">
+
+                <div class="category-item"
+                     th:each="dm : ${danhMucs}">
+
+                    <h3 th:text="${dm.tenDanhMuc}">
+                        Tên danh mục
+                    </h3>
+
+                    <p th:text="${dm.moTa}">
+                        Mô tả
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SẢN PHẨM -->
+
+    <section class="products">
+
+        <div class="container">
+
+            <h2>Trà sữa của chúng tôi</h2>
+
+            <div class="product-grid">
+
+                 <a class="product-card" th:each="sp : ${sanPhams}" th:href="@{/san-pham/{id}(id=${sp.idSanPham})}">
+                    <div class="product-image">
+                        <img th:if="${sp.hinhAnh != null}" th:src="@{'/images/' + ${sp.hinhAnh}}" th:alt="${sp.tenSanPham}">
+                    </div>
+
+                    <div class="product-info">
+
+                        <h3 th:text="${sp.tenSanPham}">
+                            Tên sản phẩm
+                        </h3>
+
+                        <p th:text="${sp.moTa}">
+                            Mô tả sản phẩm
+                        </p>
+
+                        <p class="category"
+                           th:text="${sp.danhMuc.tenDanhMuc}">
+                            Danh mục
+                        </p>
+
+                        <span class="product-link-button">
+                            Xem sản phẩm
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</body>
+
+</html>

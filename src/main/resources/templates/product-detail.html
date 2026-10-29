@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${sanPham.tenSanPham} + ' | Trà Sữa'">Chi tiết sản phẩm | Trà Sữa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="detail-page">
+    <header class="detail-header">
+        <div class="container detail-header-inner">
+            <a class="back-link" th:href="@{/}">← <span>Trở về cửa hàng</span></a>
+            <span class="brand-mark">TRÀ SỮA</span>
+        </div>
+    </header>
+
+    <main class="container detail-main">
+        <section class="product-detail">
+            <div class="detail-image-wrap">
+                <img th:if="${sanPham.hinhAnh != null and !#strings.isEmpty(sanPham.hinhAnh)}"
+                     th:src="@{'/images/' + ${sanPham.hinhAnh}}"
+                     th:alt="${sanPham.tenSanPham}">
+                <div class="detail-image-placeholder"
+                     th:if="${sanPham.hinhAnh == null or #strings.isEmpty(sanPham.hinhAnh)}">TRÀ SỮA</div>
+                <span class="detail-badge" th:if="${sanPham.noiBat}">Nổi bật</span>
+                <span class="detail-badge" th:if="${sanPham.banChay && !sanPham.noiBat}">Bán chạy</span>
+                <span class="detail-badge" style="margin-left: 80px;" th:if="${sanPham.banChay && sanPham.noiBat}">Bán chạy</span>
+            </div>
+
+            <div class="detail-content">
+                <p class="detail-eyebrow" th:text="${sanPham.danhMuc != null ? sanPham.danhMuc.tenDanhMuc : 'Thực đơn'}">Thực đơn</p>
+                <h1 th:text="${sanPham.tenSanPham}">Tên sản phẩm</h1>
+                <p class="detail-code" th:if="${sanPham.maSanPham != null}" th:text="'Mã sản phẩm: ' + ${sanPham.maSanPham}">Mã sản phẩm</p>
+                <p class="detail-description" th:text="${sanPham.moTa != null ? sanPham.moTa : 'Một lựa chọn thơm ngon cho ngày hôm nay.'}">Mô tả sản phẩm</p>
+
+                <div class="base-price" th:if="${sanPham.giaCoBan != null}">
+                    <span>Giá cơ bản</span>
+                    <strong th:text="${#numbers.formatDecimal(sanPham.giaCoBan, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</strong>
+                </div>
+
+                <section class="choice-section">
+                    <div class="section-heading">
+                        <h2>Chọn kích cỡ</h2>
+                        <span th:text="${#lists.size(sizes)} + ' lựa chọn'">0 lựa chọn</span>
+                    </div>
+                    <div class="choice-list" th:if="${!#lists.isEmpty(sizes)}">
+                        <label class="choice-row choice-option" th:each="item, state : ${sizes}">
+                            <input class="choice-input" type="radio" name="sizeId"
+                                   th:value="${item.idSize}" th:checked="${state.first}">
+                            <span class="choice-radio" aria-hidden="true"></span>
+                            <span class="choice-name" th:text="'Size ' + ${item.idSize}">Size</span>
+                            <strong th:text="${item.phuThuSize != null ? #numbers.formatDecimal(item.phuThuSize, 0, 'COMMA', 0, 'POINT') + ' đ' : 'Theo giá cơ bản'}">Giá size</strong>
+                        </label>
+                    </div>
+                    <p class="empty-note" th:if="${#lists.isEmpty(sizes)}">Sản phẩm chưa có thông tin kích cỡ.</p>
+                </section>
+
+                <section class="choice-section topping-section">
+                    <div class="section-heading">
+                        <h2>Topping đi kèm</h2>
+                        <span th:text="${#lists.size(toppings)} + ' lựa chọn'">0 lựa chọn</span>
+                    </div>
+                    <div class="choice-list" th:if="${!#lists.isEmpty(toppings)}">
+                        <label class="choice-row topping-row choice-option" th:each="item : ${toppings}">
+                            <input class="choice-input" type="checkbox" name="toppingIds" th:value="${item.idTopping}" th:checked="${item.trangThai == true}">
+                            <span class="choice-check" aria-hidden="true"></span>
+                            <span class="choice-name" th:text="'Topping ' + ${item.idTopping}">Topping</span>
+                            <span class="choice-meta" th:text="${item.trangThai == true} ? 'Bắt buộc' : 'Tùy chọn'">Tùy chọn</span>
+                            <!-- <span class="choice-limit" th:if="${item.gioiHanSoLuong != null}" th:text="'Tối đa ' + ${item.gioiHanSoLuong}">Tối đa</span> -->
+                        </label>
+                    </div>
+                    <p class="empty-note" th:if="${#lists.isEmpty(toppings)}">Sản phẩm chưa có topping.</p>
+                </section>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
